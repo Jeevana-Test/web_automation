@@ -8,12 +8,16 @@ class LoginPage(BasePage):
     LOGIN_BUTTON   = "button[data-qa='login-button']"
     ERROR_MSG      = "p[style='color: red;']"
     LOGGED_IN_TEXT = "a:has-text('Logged in as')"
+    SIGNUP_LOGIN = "a[href='/login']"
 
     def __init__(self, page: Page):
         super().__init__(page)
 
     def open(self):
-        self.navigate(BASE_URL + ROUTES["login"])
+        self.navigate(BASE_URL)
+        self.page.wait_for_timeout(2000)
+        self.click("a[href='/login']")
+        self.page.wait_for_timeout(2000)
 
     def login(self, email, password):
         self.fill(self.EMAIL_INPUT, email)
