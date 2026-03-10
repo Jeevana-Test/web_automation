@@ -5,7 +5,7 @@ URLs, timeouts, credentials — single source of truth.
 """
 BASE_URL = "https://automationexercise.com"
 TIMEOUT  = 15000
-HEADLESS = False
+HEADLESS = True
 
 USERS={
     "valid_user":{
