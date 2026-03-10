@@ -1,4 +1,5 @@
-name: Web Automation CI (Fixed)
+
+name: Web Automation CI (Fixed Path)
 
 on:
   push:
@@ -18,15 +19,14 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Python deps
+      - name: Install deps
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
+          playwright install chromium
 
-      - name: Install Playwright browsers
-        run: playwright install chromium  # faster, no system deps
+      - name: List test files (debug)
+        run: find tests -name "*.py" | head -5
 
-      - name: Run pytest tests (detailed)
-        run: |
-          cd test
-          pytest test_login.py -v -s --tb=short
+      - name: Run Playwright tests
+        run: pytest tests/ -v -s --tb=short
