@@ -1,0 +1,42 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        python -m playwright install --with-deps
+
+    - name: Add project to PYTHONPATH
+      run: |
+        echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
+        echo "PYTHONPATH=$PYTHONPATH:$(pwd)/web_page" >> $GITHUB_ENV
+
+    - name: Run Playwright tests
+      env:
+        PLAYWRIGHT_HEADLESS: "true"
+      run: |
+        pytest web_page/ -v --tb=short -k "not debug_test" --html=report.html
+
+    - name: Upload HTML report
+      uses: actions/upload-artifact@v4
+      with:
+        name: playwright-report
+        path: report.html
