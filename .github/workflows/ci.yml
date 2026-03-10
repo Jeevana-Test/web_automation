@@ -1,0 +1,16 @@
+name: Hello CI
+
+on:
+  push:        # run every time you push
+    branches: [ master ]   # or main, match your branch name
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Say hello
+        run: echo "Hello from GitHub Actions CI"
