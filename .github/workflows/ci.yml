@@ -1,4 +1,4 @@
-name: Playwright Tests (Headless + Config Fix)
+name: Web Automation CI/CD (Production)
 
 on:
   push:
@@ -17,17 +17,42 @@ jobs:
       with:
         python-version: "3.11"
 
+    - name: Cache pip
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+
     - name: Install dependencies
       run: |
         pip install --upgrade pip
         pip install -r requirements.txt
         python -m playwright install --with-deps chromium
 
-    - name: Fix PYTHONPATH
+    - name: Add PYTHONPATH
       run: echo "PYTHONPATH=$PYTHONPATH:$(pwd):$(pwd)/web_page" >> $GITHUB_ENV
 
-    - name: Run tests (skip debug_test)
+    - name: Run login tests (skip debug)
       env:
         PLAYWRIGHT_HEADLESS: "true"
-      run: |
-        pytest web_page/ -v --tb=short -k "not debug_test"  # skip failing file
+      run: pytest web_page/ -v --tb=short -k "not debug_test" --html=report.html
+
+    - name: Upload test report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: pytest-report
+        path: report.html
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./web_page
