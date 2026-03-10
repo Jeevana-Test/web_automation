@@ -11,23 +11,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v5  # v4 → v5 (latest)
+      uses: actions/setup-python@v4
       with:
         python-version: "3.11"
 
     - name: Install dependencies
       run: |
-        pip install --upgrade pip      # add this
-        pip install -r requirements.txt
-        python -m playwright install --with-deps chromium  # specify chromium
+        pip install -r requirment.txt
+        python -m playwright install --with-deps
 
     - name: Add project to PYTHONPATH
       run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
 
-    - name: Run tests
+    - name: Run Playwright tests
       env:
         PLAYWRIGHT_HEADLESS: "true"
-      run: pytest tests/ -v --tb=short  # add tests/ path + short traceback
+      run: pytest -v --tb=no
