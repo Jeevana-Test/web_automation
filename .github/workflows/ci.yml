@@ -1,33 +1,33 @@
-name: Web Automation CI (Debug Tests)
+name: Playwright Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ master ]
+    branches: [ "master" ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+    - name: Set up Python
+      uses: actions/setup-python@v5  # v4 → v5 (latest)
+      with:
+        python-version: "3.11"
 
-      - run: |
-          pip install --upgrade pip
-          pip install -r requirements.txt
-          playwright install chromium
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip      # add this
+        pip install -r requirements.txt
+        python -m playwright install --with-deps chromium  # specify chromium
 
-      - name: Show folder structure
-        run: |
-          find . -name "*test*" -o -name "*Test*" | head -20
-          ls -la tests/ || echo "No tests/ folder"
+    - name: Add project to PYTHONPATH
+      run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
 
-      - name: What pytest finds
-        run: pytest --collect-only -v --tb=no
-
-      - name: Run ALL tests
-        run: pytest -v -s --tb=short PYTHONPATH=.
+    - name: Run tests
+      env:
+        PLAYWRIGHT_HEADLESS: "true"
+      run: pytest tests/ -v --tb=short  # add tests/ path + short traceback
