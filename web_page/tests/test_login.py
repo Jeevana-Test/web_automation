@@ -13,7 +13,7 @@ class TestLogin:
     @pytest.mark.smoke
     def test_valid_login(self, logged_in_page):
         login = LoginPage(logged_in_page)
-        assert login.is_logged_in() == False
+        assert login.is_logged_in() == True
 
     @pytest.mark.regression
     def test_empty_login(self, page):
