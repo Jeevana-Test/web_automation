@@ -1,5 +1,4 @@
-
-name: Web Automation CI (Fixed Path)
+name: Web Automation CI (Import Fixed)
 
 on:
   push:
@@ -11,22 +10,12 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
-      - name: Install deps
-        run: |
+      - run: |
           pip install --upgrade pip
           pip install -r requirements.txt
           playwright install chromium
-
-      - name: List test files (debug)
-        run: find tests -name "*.py" | head -5
-
-      - name: Run Playwright tests
-        run: pytest tests/ -v -s --tb=short
+      - run: pytest tests/ -v -s --tb=short PYTHONPATH=.
