@@ -22,4 +22,4 @@ class DashboardPage(BasePage):
         self.navigate(BASE_URL+ROUTES["cart"])
 
     def logout(self):
-        self.click(self.LOGOUT_LINK)
+        self.click(self.LOGOUT_LINK)c
