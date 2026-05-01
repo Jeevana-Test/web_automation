@@ -24,6 +24,9 @@ jobs:
         pip install -r requirements.txt
         python -m playwright install --with-deps
 
+    - name: Install xvfb (virtual display)
+      run: sudo apt-get update && sudo apt-get install -y xvfb
+
     - name: Add project to PYTHONPATH
       run: |
         echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
@@ -32,7 +35,9 @@ jobs:
     - name: Run Playwright tests
       env:
         PLAYWRIGHT_HEADLESS: "true"
+        DISPLAY: ":99"
       run: |
+        sudo Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
         pytest web_page/ -v --tb=short -k "not debug_test" --html=report.html
 
     - name: Upload HTML report
