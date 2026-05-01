@@ -29,3 +29,10 @@ class DashboardPage(BasePage):
         count = self.page.locator(self.CART_LINK).count()
         print(f"Cart link count: {count}")
         return self.is_visible(self.CART_LINK)
+
+    def is_element_present(self, selector: str) -> bool:
+        """Check if an element is present on the page."""
+        try:
+            return self.page.locator(selector).count() > 0
+        except Exception:
+            return False
