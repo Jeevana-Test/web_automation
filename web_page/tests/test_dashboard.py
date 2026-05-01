@@ -21,3 +21,8 @@ class TestDashboard:
         dashboard = DashboardPage(logged_in_page)
         dashboard.logout()
         assert "login" in logged_in_page.url
+
+    @pytest.mark.smoke
+    def test_dashboard_element_presence(self, logged_in_page):
+        dashboard = DashboardPage(logged_in_page)
+        assert dashboard.is_element_present("dashboard-element-selector") == True

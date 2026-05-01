@@ -23,3 +23,11 @@ class DashboardPage(BasePage):
 
     def logout(self):
         self.click(self.LOGOUT_LINK)
+
+
+    def is_element_present(self, selector: str) -> bool:
+        """Check if an element is present on the page."""
+        try:
+            return self.page.locator(selector).count() > 0
+        except Exception:
+            return False
