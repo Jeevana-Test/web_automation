@@ -23,3 +23,9 @@ class DashboardPage(BasePage):
 
     def logout(self):
         self.click(self.LOGOUT_LINK)
+
+    def is_cart_link_visible(self) -> bool:
+        """Check if the cart link is visible on the dashboard."""
+        count = self.page.locator(self.CART_LINK).count()
+        print(f"Cart link count: {count}")
+        return self.is_visible(self.CART_LINK)
